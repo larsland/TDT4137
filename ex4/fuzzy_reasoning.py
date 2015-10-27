@@ -53,6 +53,9 @@ class Reasoner:
                  + self.actions['speedup'] * 7
                  + self.actions['floorit'] * 6)
 
+
+
+
         print("COG: " + '%.2f' % (above / below))
 
     def triangle(self, pos, x0, x1, x2, clip):
