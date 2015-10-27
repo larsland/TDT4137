@@ -1,15 +1,23 @@
+
 class Reasoner:
     def __init__(self, crisp_x, crisp_y):
         self.crisp_x = crisp_x
         self.crisp_y = crisp_y
 
+        # Dictionary to keep track of the intersection value of the distance graphs and the crisp x
         self.distance = {'verysmall': 0, 'small': 0, 'perfect': 0, 'big': 0, 'verybig': 0}
+
+        # Dictionary to keep track of the intersection value of the delta graphs and crisp y
         self.delta = {'shrinkingfast': 0, 'shrinking': 0, 'stable': 0, 'growing': 0, 'growingfast': 0}
+
+        # Dictionary to keep track of the outputs of each action
         self.actions = {'none': 0, 'slowdown': 0, 'speedup': 0, 'floorit': 0, 'brakehard': 0}
 
     def __repr__(self):
-        return "DISTANCE: " + str(self.distance) + '\n'*2 \
-               + "DELTA: " + str(self.delta) + '\n'*2 \
+        return '\n' + "CRISP_X: " + str(self.crisp_x) + \
+               '\n' + "CRISP_Y: " + str(self.crisp_y) + \
+               '\n'*2 + "DISTANCE: " + str(self.distance) + \
+               '\n'*2 + "DELTA: " + str(self.delta) + '\n'*2 \
                + "ACTIONS: " + str(self.actions) + '\n'
 
     def fuzzification(self):
@@ -45,13 +53,13 @@ class Reasoner:
                  + self.actions['speedup'] * 7
                  + self.actions['floorit'] * 6)
 
-        return '%.2f' % (above / below)
+        print("COG: " + '%.2f' % (above / below))
 
     def triangle(self, pos, x0, x1, x2, clip):
         value = 0.0
-        if pos >= x0 and pos <= x1:
+        if x0 <= pos <= x1:
             value = (pos - x0) / (x1 - x0)
-        elif pos  >= x1 and pos <= x2:
+        elif x1 <= pos <= x2:
             value = (x2 - pos) / (x1 - x0)
         if value > clip:
             value = clip
@@ -88,10 +96,19 @@ if __name__ == '__main__':
 
     reasoner = Reasoner(crisp_x_value, crisp_y_value)
 
+    # Step 1
     reasoner.fuzzification()
+
+    # Step 2
     reasoner.rule_evaluation()
+
+    # Step 4
+    reasoner.defuzzification()
+
+    # Printing rest of values in the reasoner
     print(reasoner)
-    print("CENTRE OF GRAVITY: ", reasoner.defuzzification())
+
+
 
 
 
